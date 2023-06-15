@@ -1,17 +1,7 @@
-"""Module to draw samples from the circuit.
-Used for computing properties of the circuit like Entanglability and Expressibility.
-"""
-
 import typing
-
-import cirq
 import numpy as np
 import qiskit
-
 from qiskit.providers.aer.noise import NoiseModel as qiskitNoiseModel
-from cirq.devices.noise_model import NoiseModel as cirqNoiseModel
-from pyquil.noise import NoiseModel as pyquilNoiseModel
-
 from ..interface.circuit import CircuitDescriptor
 
 
@@ -21,9 +11,7 @@ class CircuitSimulator:
     def __init__(
         self,
         circuit: CircuitDescriptor,
-        noise_model: typing.Union[
-            cirqNoiseModel, qiskitNoiseModel, pyquilNoiseModel, None
-        ] = None,
+        noise_model: typing.Union[qiskitNoiseModel, None] = None,
     ) -> None:
         """Initialize the state simulator
         :type circuit: CircuitDescriptor
@@ -71,45 +59,16 @@ class CircuitSimulator:
                     noise_model=self.noise_model,
                     backend_options={"method": "density_matrix"},
                 ).result()
-                result_data = result.data(0)["snapshots"]["density_matrix"]["final"][0][
-                    "value"
-                ]
+                result_data = result.data(0)["snapshots"]["density_matrix"]["final"][0]["value"]
             else:
                 circuit.snapshot("final", snapshot_type="statevector")
                 result = qiskit.execute(
                     circuit, qiskit.Aer.get_backend("aer_simulator_statevector")
                 ).result()
                 result_data = result.data(0)["snapshots"]["statevector"]["final"][0]
-
-        elif self.circuit.default_backend == "cirq":
-
-            circuit = self.circuit.cirq_circuit
-            non_unitary_flag = False
-            for op in circuit.all_operations():
-                op_name = str(op).split("(")[0]
-                if op_name in [
-                    "phase_flip",
-                    "phase_damp",
-                    "amplitude_damp",
-                    "depolarize",
-                    "asymmetric_depolarize",
-                ]:
-                    non_unitary_flag = True
-                    break
-
-            if self.noise_model is None and not non_unitary_flag:
-                simulator = cirq.Simulator()  # type: ignore
-                result = simulator.simulate(self.circuit.cirq_circuit, param_resolver)
-                result_data = result.final_state_vector
-            else:
-                simulator = cirq.DensityMatrixSimulator(noise=self.noise_model)  # type: ignore
-                result = simulator.simulate(self.circuit.cirq_circuit, param_resolver)
-                result_data = result.final_density_matrix
-
         else:
             raise NotImplementedError(
                 "Parametrized circuit simulation is not implemented for this backend."
             )
-
         self._result = result_data
         return result_data
