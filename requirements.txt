@@ -1,18 +1,1 @@
-cirq==0.13.1
-sympy==1.8
-tensorflow==2.7.0
-tensorflow-quantum==0.7.2
-numpy>=1.19
-pandas==1.4.4
-tensorboard==2.11.0
-qiskit==0.30.0
-pyquil==3.0.1
-dash==2.7.0
-networkx==2.8.8
-plotly==5.1.0
-scikit-learn==0.24.2
-seaborn==0.11.1
-tqdm==4.36.1
-wandb
-pylint==2.4.4
-yapf==0.28.0
+##To update
