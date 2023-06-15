@@ -1,9 +1,7 @@
 import networkx as nx
-
 import dash
 import dash_core_components as dash_core
 import dash_html_components as dash_html
-
 from qleet.interface.metas import AnalyzerList
 from qleet.analyzers.loss_landscape import LossLandscapePlotter
 from qleet.analyzers.training_path import OptimizationPathPlotter
