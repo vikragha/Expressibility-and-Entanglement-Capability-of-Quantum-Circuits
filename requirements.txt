@@ -1,1 +1,7 @@
-##To update
+!pip install qiskit
+!pip install numpy
+!pip install sympy
+!pip install networkx
+!pip install dash
+!pip install dash-core-components
+!pip install dash-html-components
