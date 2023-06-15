@@ -1,18 +1,9 @@
-"""This module houses the ways to specify a metric, and sample solutions to compute it's value.
-
-Metrics are a useful abstraction which given the state of the circuit compute some
-classical value which we need to interpret or plot.
-"""
-
 import abc
 import typing
 import warnings
 
 import numpy as np
 import sympy
-
-import tensorflow_quantum as tfq
-import cirq
 
 from ..interface.circuit import CircuitDescriptor
 
@@ -24,7 +15,7 @@ class MetricSpecifier(abc.ABC):
     Examples would be an arbitrary cost function, Mean Squared Error for some regression task,
     size of the max cut, etc.
 
-    This is an abstract class, all metrics should be it's subclasses
+    This is an abstract class, all metrics should be its subclasses.
 
     How the metric is computed is left for the user to decide, it can be from the actual samples
     drawn from the circuit, or from the state vector, or from the density matrix.
@@ -35,14 +26,7 @@ class MetricSpecifier(abc.ABC):
         :type default_call_mode: str
         :param default_call_mode: Which function to use by default for computing metric
         """
-        self.__mode_to_function_map = {
-            "samples": self.from_samples_vector,
-            "state_vector": self.from_state_vector,
-            "density_matrix": self.from_density_matrix,
-        }
-        assert default_call_mode in ["samples", "state_vector", "density_matrix"]
         self.default_call_mode = default_call_mode
-        self.default_call_function = self.__mode_to_function_map[default_call_mode]
 
     def from_circuit(
         self,
@@ -60,14 +44,13 @@ class MetricSpecifier(abc.ABC):
         :param mode: From what to compute the metric, samples, state_vector, or density_matrix
         :return: The value of the metric at those parameters
         :rtype: float
-        :raises NotImplementedError: if required mode of evaluating metric wasn't implemented
         :raises ValueError: if the mode specified wasn't valid
         """
         if mode == "samples":
             samples = sample_solutions(
-                circuit=circuit_descriptor.cirq_circuit,
-                param_symbols=circuit_descriptor.parameters,
-                param_values=parameters,
+                circuit_descriptor.qiskit_circuit,
+                circuit_descriptor.parameters,
+                parameters
             )
             return self.from_samples_vector(samples)
         elif mode == "state_vector":
@@ -114,27 +97,26 @@ class MetricSpecifier(abc.ABC):
 
 
 def sample_solutions(
-    circuit: cirq.Circuit,
-    param_symbols: typing.List[sympy.Symbol],
-    param_values: typing.Iterable,
-    samples: int = 1000,
+    circuit: qiskit.QuantumCircuit,
+    params: typing.List[sympy.Symbol],
+    values: typing.Iterable,
+    shots: int = 1000,
 ) -> np.ndarray:
     """Get the computed cuts for a given ansatz
-    :type circuit: cirq.Circuit
+    :type circuit: qiskit.QuantumCircuit
     :param circuit: Circuit to be sampled
-    :type param_symbols: List of sympy.Symbols
-    :param param_symbols: The symbols of model parameters
-    :type param_values: List of floats
-    :param param_values: The value of model parameters to sample at, 1-D vector
-    :type samples: int
-    :param samples: Number of times to sample the resulting quantum state
+    :type params: List of sympy.Symbols
+    :param params: The symbols of model parameters
+    :type values: List of floats
+    :param values: The value of model parameters to sample at, 1-D vector
+    :type shots: int
+    :param shots: Number of times to sample the resulting quantum state
     :return: 2-D matrix, n_samples rows of boolean vectors showing the cut
     :rtype: np.array
     """
-    output = tfq.layers.Sample()(
-        circuit,
-        symbol_names=param_symbols,
-        symbol_values=[param_values],
-        repetitions=samples,
-    )
-    return output.numpy()[0]
+    backend = qiskit.Aer.get_backend('qasm_simulator')
+    resolved_circuit = circuit.bind_parameters(dict(zip(params, values)))
+    job = qiskit.execute(resolved_circuit, backend, shots=shots)
+    results = job.result().get_counts(resolved_circuit)
+    samples = np.array(list(results.keys()))
+    return samples
