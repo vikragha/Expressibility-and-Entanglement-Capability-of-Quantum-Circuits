@@ -4,8 +4,6 @@ import itertools
 import typing
 
 from qiskit.providers.aer.noise import NoiseModel as qiskitNoiseModel
-from cirq.devices.noise_model import NoiseModel as cirqNoiseModel
-from pyquil.noise import NoiseModel as pyquilNoiseModel
 
 from qiskit.quantum_info import partial_trace
 from scipy.special import comb
@@ -17,9 +15,7 @@ from ..interface.circuit import CircuitDescriptor
 from ..simulators.circuit_simulators import CircuitSimulator
 
 NOISE_MODELS = {
-    "cirq": cirqNoiseModel,
-    "pyquil": pyquilNoiseModel,
-    "qiskit": qiskitNoiseModel,
+    "qiskit": qiskitNoiseModel
 }
 
 
@@ -30,7 +26,7 @@ class EntanglementCapability(MetaExplorer):
         self,
         circuit: CircuitDescriptor,
         noise_model: typing.Union[
-            cirqNoiseModel, qiskitNoiseModel, pyquilNoiseModel, None
+            qiskitNoiseModel, None
         ] = None,
         samples: int = 1000,
     ):
@@ -48,19 +44,9 @@ class EntanglementCapability(MetaExplorer):
 
         if noise_model is not None:
             if (
-                (
-                    circuit.default_backend == "cirq"
-                    and isinstance(noise_model, cirqNoiseModel)
-                )
-                or (
                     circuit.default_backend == "qiskit"
                     and isinstance(noise_model, qiskitNoiseModel)
-                )
-                or (
-                    circuit.default_backend == "pyquil"
-                    and isinstance(noise_model, pyquilNoiseModel)
-                )
-            ):
+                ):
                 self.noise_model = noise_model
             else:
                 raise ValueError(
@@ -95,24 +81,25 @@ class EntanglementCapability(MetaExplorer):
         dems = np.linalg.matrix_power(
             [partial_trace(state, list(qb)).data for qb in perms], 2
         )
-        trace = np.trace(dems, axis1=1, axis2=2)
+        trace = np.trace(dems, axis1=1, axis2=2)f
         return np.sum(trace).real
 
     def meyer_wallach_measure(self, states, num_qubits):
-        r"""Returns the meyer-wallach entanglement measure for the given circuit.
-
-        .. math::
-            Q = \frac{2}{|\vec{\theta}|}\sum_{\theta_{i}\in \vec{\theta}}
-            \Bigg(1-\frac{1}{n}\sum_{k=1}^{n}Tr(\rho_{k}^{2}(\theta_{i}))\Bigg)
-
         """
+    Returns the Meyer-Wallach entanglement measure for the given circuit.
+
+    Parameters:
+        states (list): List of quantum states.
+        num_qubits (int): Number of qubits in the circuit.
+
+    Returns:
+        float: Meyer-Wallach entanglement measure.
+    """
+
+        
         permutations = list(itertools.combinations(range(num_qubits), num_qubits - 1))
-        ns = 2 * sum(
-            [
-                1 - 1 / num_qubits * self.scott_helper(state, permutations)
-                for state in states
-            ]
-        )
+        ns = 2 * sum([1 - 1 / num_qubits * self.scott_helper(state, permutations)
+                for state in states])
         return ns.real
 
     def scott_measure(self, states, num_qubits):
