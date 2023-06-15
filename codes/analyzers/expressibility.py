@@ -4,8 +4,6 @@ import itertools
 import typing
 
 from qiskit.providers.aer.noise import NoiseModel as qiskitNoiseModel
-from cirq.devices.noise_model import NoiseModel as cirqNoiseModel
-from pyquil.noise import NoiseModel as pyquilNoiseModel
 
 from qiskit.quantum_info import state_fidelity
 from scipy.spatial.distance import jensenshannon
@@ -17,11 +15,7 @@ from ..interface.metas import MetaExplorer
 from ..interface.circuit import CircuitDescriptor
 from ..simulators.circuit_simulators import CircuitSimulator
 
-NOISE_MODELS = {
-    "cirq": cirqNoiseModel,
-    "pyquil": pyquilNoiseModel,
-    "qiskit": qiskitNoiseModel,
-}
+NOISE_MODELS = {"qiskit": qiskitNoiseModel}
 
 
 class Expressibility(MetaExplorer):
@@ -30,9 +24,7 @@ class Expressibility(MetaExplorer):
     def __init__(
         self,
         circuit: CircuitDescriptor,
-        noise_model: typing.Union[
-            cirqNoiseModel, qiskitNoiseModel, pyquilNoiseModel, None
-        ] = None,
+        noise_model: typing.Union[qiskitNoiseModel, None] = None,
         samples: int = 1000,
     ):
         """Constructor the the Expressibility analyzer
@@ -46,20 +38,7 @@ class Expressibility(MetaExplorer):
         self.circuit = circuit
 
         if noise_model is not None:
-            if (
-                (
-                    circuit.default_backend == "cirq"
-                    and isinstance(noise_model, cirqNoiseModel)
-                )
-                or (
-                    circuit.default_backend == "qiskit"
-                    and isinstance(noise_model, qiskitNoiseModel)
-                )
-                or (
-                    circuit.default_backend == "pyquil"
-                    and isinstance(noise_model, pyquilNoiseModel)
-                )
-            ):
+            if (circuit.default_backend == "qiskit" and isinstance(noise_model, qiskitNoiseModel)):
                 self.noise_model = noise_model
             else:
                 raise ValueError(
@@ -224,7 +203,7 @@ class Expressibility(MetaExplorer):
 
         return pqc_expressibilities
 
-    def plot(self, figsize=(6, 4), dpi=300, **kwargs):
+    def plot(self, figsize=(12, 8), dpi=300, **kwargs):
         """Returns plot for expressibility visualization"""
         if not self.plot_data:
             raise ValueError("Perform expressibility calculation first")
