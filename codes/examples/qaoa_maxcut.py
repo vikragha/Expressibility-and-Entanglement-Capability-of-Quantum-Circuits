@@ -8,7 +8,6 @@ import typing
 import numpy as np
 import networkx as nx
 import sympy
-import cirq
 
 from ..interface.metric_spec import MetricSpecifier
 
@@ -24,7 +23,7 @@ class QAOACircuitMaxCut:
         :param p: The number of blocks of the QAOA circuit
         """
         self._graph = nx.gnm_random_graph(n=6, m=15) if graph is None else graph
-        self._qubits = cirq.GridQubit.rect(1, self._graph.number_of_nodes())
+        self._qubits = list(self._graph.nodes)
         self.params = sympy.symbols("q0:%d" % (2 * p))
 
         self.qaoa_circuit = cirq.Circuit()
@@ -32,27 +31,26 @@ class QAOACircuitMaxCut:
             self.qaoa_circuit.append(cirq.H(qubit))
         for i in range(p):
             # Cost Hamiltonian
-            for edge in self._graph.edges():
-                self.qaoa_circuit += cirq.CNOT(
+            for edge in self._graph.edges:
+                self.qaoa_circuit.append(cirq.CNOT(
                     self._qubits[edge[0]], self._qubits[edge[1]]
-                )
-                self.qaoa_circuit += cirq.rz(self.params[2 * i]).on(
+                ))
+                self.qaoa_circuit.append(cirq.rz(self.params[2 * i]).on(
                     self._qubits[edge[1]]
-                )
-                self.qaoa_circuit += cirq.CNOT(
+                ))
+                self.qaoa_circuit.append(cirq.CNOT(
                     self._qubits[edge[0]], self._qubits[edge[1]]
-                )
+                ))
             # Mixing Hamiltonian
             for j in range(len(self._qubits)):
-                self.qaoa_circuit += cirq.rx(2 * self.params[2 * i + 1]).on(
+                self.qaoa_circuit.append(cirq.rx(2 * self.params[2 * i + 1]).on(
                     self._qubits[j]
-                )
+                ))
 
-        self.qaoa_cost: cirq.PauliSum = cirq.PauliSum()
-        for edge in self._graph.edges():
-            self.qaoa_cost += cirq.PauliString(
-                1 / 2 * cirq.Z(self._qubits[edge[0]]) * cirq.Z(self._qubits[edge[1]])
-            )
+        self.qaoa_cost = sum(
+            1 / 2 * cirq.Z(self._qubits[edge[0]]) * cirq.Z(self._qubits[edge[1]])
+            for edge in self._graph.edges
+        )
 
     def solve_classically(self):
         """Solve the combinatorial problem using a full, exponentially sized search
@@ -60,7 +58,7 @@ class QAOACircuitMaxCut:
         :rtype: float
         """
         subsets_list = itertools.chain.from_iterable(
-            itertools.combinations(self._graph.nodes(), r)
+            itertools.combinations(self._graph.nodes, r)
             for r in range(self._graph.number_of_nodes() + 1)
         )
         max_cut = [
