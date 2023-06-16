@@ -81,7 +81,7 @@ class EntanglementCapability(MetaExplorer):
         dems = np.linalg.matrix_power(
             [partial_trace(state, list(qb)).data for qb in perms], 2
         )
-        trace = np.trace(dems, axis1=1, axis2=2)f
+        trace = np.trace(dems, axis1=1, axis2=2)
         return np.sum(trace).real
 
     def meyer_wallach_measure(self, states, num_qubits):
