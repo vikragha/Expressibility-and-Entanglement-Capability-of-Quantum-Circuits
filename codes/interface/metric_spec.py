@@ -5,6 +5,7 @@ import warnings
 import numpy as np
 import sympy
 
+import qiskit
 from ..interface.circuit import CircuitDescriptor
 
 warnings.filterwarnings("ignore")
