@@ -2,7 +2,7 @@
 
 
 # determine if running in an interactive environment
-from qleet.interface import dashboard
+from codes.interface import dashboard
 
 INTERACTIVE = False
 
