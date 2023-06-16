@@ -1,2 +1,2 @@
-import qleet.simulators.pqc_trainer
-import qleet.simulators.circuit_simulators
+import codes.simulators.pqc_trainer
+import codes.simulators.circuit_simulators
