@@ -1,1 +1,1 @@
-import qleet.examples.qaoa_maxcut
+import codes.examples.qaoa_maxcut
