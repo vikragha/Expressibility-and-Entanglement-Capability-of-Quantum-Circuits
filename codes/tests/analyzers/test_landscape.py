@@ -4,16 +4,16 @@ import plotly.graph_objects as pg
 
 import pytest
 
-import qleet
+import codes
 
 
 graph = nx.gnm_random_graph(n=4, m=10)
-qaoa = qleet.QAOACircuitMaxCut(graph, p=1)
-circuit = qleet.CircuitDescriptor(qaoa.qaoa_circuit, qaoa.params, qaoa.qaoa_cost)
-trainer = qleet.PQCSimulatedTrainer(circuit)
-metric = qleet.MaxCutMetric(graph)
+qaoa = codes.QAOACircuitMaxCut(graph, p=1)
+circuit = codes.CircuitDescriptor(qaoa.qaoa_circuit, qaoa.params, qaoa.qaoa_cost)
+trainer = codes.PQCSimulatedTrainer(circuit)
+metric = codes.MaxCutMetric(graph)
 trainer.train(n_samples=50)
-plot = qleet.LossLandscapePlotter(trainer, metric, dim=2)
+plot = codes.LossLandscapePlotter(trainer, metric, dim=2)
 
 
 def test_landscape_plotting_surface():
