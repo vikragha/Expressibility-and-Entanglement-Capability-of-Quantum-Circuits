@@ -4,16 +4,16 @@ import numpy as np
 
 import pytest
 
-import qleet
+import codes
 
 
 @pytest.mark.parametrize("ensemble_size", [3, 5])
 def test_plot_histogram(ensemble_size):
     graph = nx.gnm_random_graph(n=10, m=40)
-    qaoa = qleet.QAOACircuitMaxCut(graph, p=2)
-    circuit = qleet.CircuitDescriptor(qaoa.qaoa_circuit, qaoa.params, qaoa.qaoa_cost)
+    qaoa = codes.QAOACircuitMaxCut(graph, p=2)
+    circuit = codes.CircuitDescriptor(qaoa.qaoa_circuit, qaoa.params, qaoa.qaoa_cost)
     epochs_chart = (0, 1, 5, 10)
-    plot = qleet.ParameterHistograms(
+    plot = codes.ParameterHistograms(
         circuit, ensemble_size=2, epochs_chart=epochs_chart
     )
     ax = plot.plot()
