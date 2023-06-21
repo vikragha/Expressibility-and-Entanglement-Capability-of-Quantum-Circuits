@@ -3,7 +3,7 @@ import sympy
 import cirq
 import qiskit
 
-import qleet
+import codes
 
 
 def test_cirq_simulator_state_vector():
@@ -15,11 +15,11 @@ def test_cirq_simulator_state_vector():
             cirq.rx(params[1]).on(cirq.NamedQubit("q_1")),
         ]
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=params, cost_function=cirq.PauliSum()
     )
     params = {p: np.random.random() * 2 * np.pi for p in cirq_descriptor.parameters}
-    simulator = qleet.simulators.circuit_simulators.CircuitSimulator(cirq_descriptor)
+    simulator = codes.simulators.circuit_simulators.CircuitSimulator(cirq_descriptor)
     state_vector = simulator.simulate(params)
     assert isinstance(state_vector, np.ndarray), "State vector should be a numpy array"
     assert (
@@ -38,11 +38,11 @@ def test_cirq_simulator_density_matrix():
             cirq.amplitude_damp(0.1).on(cirq.NamedQubit("q_1")),
         ]
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=params, cost_function=cirq.PauliSum()
     )
     params = {p: np.random.random() * 2 * np.pi for p in cirq_descriptor.parameters}
-    simulator = qleet.simulators.circuit_simulators.CircuitSimulator(
+    simulator = codes.simulators.circuit_simulators.CircuitSimulator(
         cirq_descriptor, noise_model=None
     )
     density_matrix = simulator.simulate(params)
@@ -62,11 +62,11 @@ def test_qiskit_simulator():
     qiskit_circuit.rx(params[0], 0)
     qiskit_circuit.cx(0, 1)
     qiskit_circuit.rx(params[1], 1)
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit, params=params, cost_function=cirq.PauliSum()
     )
 
-    simulator = qleet.simulators.circuit_simulators.CircuitSimulator(qiskit_descriptor)
+    simulator = codes.simulators.circuit_simulators.CircuitSimulator(qiskit_descriptor)
     params = {p: np.random.random() * 2 * np.pi for p in qiskit_descriptor.parameters}
     state_vector = simulator.simulate(params)
     assert isinstance(state_vector, np.ndarray), "State vector should be a numpy array"
