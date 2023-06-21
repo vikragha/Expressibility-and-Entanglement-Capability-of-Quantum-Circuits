@@ -1,4 +1,4 @@
 [coverage:run]
 show_missing = True
 omit =
-    qleet/interface/dashboard.py
+    codes/interface/dashboard.py
