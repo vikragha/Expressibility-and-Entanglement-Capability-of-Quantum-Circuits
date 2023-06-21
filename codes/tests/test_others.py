@@ -1,4 +1,4 @@
-import qleet
+import codes
 
 
 def test_version():
