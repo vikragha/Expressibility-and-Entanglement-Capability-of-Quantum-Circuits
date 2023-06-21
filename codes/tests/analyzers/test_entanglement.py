@@ -7,7 +7,7 @@ import qiskit
 from qiskit.providers.aer.noise import NoiseModel as qiskitNoiseModel
 from cirq.devices.noise_model import NoiseModel as cirqNoiseModel
 
-import qleet
+import codes
 
 
 @pytest.mark.parametrize(
@@ -26,11 +26,11 @@ def test_entanglement(params, noise_model, metric, samples):
         qiskit_circuit.rx(params[0], 0)
         qiskit_circuit.rz(params[1], 0)
     qiskit_circuit.cx(0, 1)
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit, params=params, cost_function=None
     )
     qiskit_entanglement_capability = (
-        qleet.analyzers.entanglement.EntanglementCapability(
+        codes.analyzers.entanglement.EntanglementCapability(
             qiskit_descriptor, noise_model=noise_model, samples=samples
         )
     )
@@ -63,14 +63,14 @@ def test_exception_entanglement(noise_model, metric, msg_match):
     qiskit_circuit.h(0)
     qiskit_circuit.cx(0, 1)
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit, params=[], cost_function=None
     )
 
     with pytest.raises(ValueError, match=msg_match):
 
         qiskit_entanglement_capability = (
-            qleet.analyzers.entanglement.EntanglementCapability(
+            codes.analyzers.entanglement.EntanglementCapability(
                 qiskit_descriptor, noise_model=noise_model, samples=100
             )
         )
