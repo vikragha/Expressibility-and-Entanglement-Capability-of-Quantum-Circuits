@@ -6,7 +6,7 @@ import pyquil
 
 import sympy
 
-import qleet
+import codes
 
 # cirq template circuit
 cirq_circuit = cirq.Circuit(
@@ -47,7 +47,7 @@ pyquil_circuit += pyquil.gates.CNOT(2, 1)
 
 def test_cirq_constructor():
     """Tests circuit descriptor for cirq circuits"""
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
     assert cirq_circuit == cirq_descriptor.cirq_circuit
@@ -55,7 +55,7 @@ def test_cirq_constructor():
 
 def test_qiskit_constructor():
     """Tests circuit descriptor for qiskit circuits"""
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
@@ -65,7 +65,7 @@ def test_qiskit_constructor():
 
 def test_pyquil_constructor():
     """Tests circuit descriptor for pyquil circuits"""
-    pyquil_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
     assert pyquil_circuit == pyquil_descriptor.pyquil_circuit
@@ -73,11 +73,11 @@ def test_pyquil_constructor():
 
 def test_cirq_pyquil_conversion():
     """Tests circuit conversions for cirq and pyquil circuits"""
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
 
-    pyquil_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -87,13 +87,13 @@ def test_cirq_pyquil_conversion():
 
 def test_qiskit_pyquil_conversion():
     """Tests circuit conversions for pyquil and qiskit circuits"""
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
 
-    pyquil_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -103,13 +103,13 @@ def test_qiskit_pyquil_conversion():
 
 def test_cirq_qiskit_conversion():
     """Tests circuit conversions for cirq and qiskit circuits"""
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit,
         params=[],
         cost_function=None,
     )
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=None,
@@ -129,25 +129,25 @@ def test_circuit_descriptor_from_qasm():
     """Tests circuit descriptor's from_qasm functionality"""
 
     qasm_str = qiskit_circuit.qasm()
-    qiskit_descriptor_qasm = qleet.interface.circuit.CircuitDescriptor.from_qasm(
+    qiskit_descriptor_qasm = codes.interface.circuit.CircuitDescriptor.from_qasm(
         qasm_str, [], qiskit.quantum_info.PauliList(["III"]), "qiskit"
     )
-    pyquil_descriptor_qasm = qleet.interface.circuit.CircuitDescriptor.from_qasm(
+    pyquil_descriptor_qasm = codes.interface.circuit.CircuitDescriptor.from_qasm(
         qasm_str, [], pyquil.paulis.PauliSum([]), "pyquil"
     )
-    cirq_descriptor_qasm = qleet.interface.circuit.CircuitDescriptor.from_qasm(
+    cirq_descriptor_qasm = codes.interface.circuit.CircuitDescriptor.from_qasm(
         qasm_str, [], cirq.PauliSum(), "cirq"
     )
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
-    pyquil_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit_qasm, params=[], cost_function=cirq.PauliSum()
     )
 
@@ -160,11 +160,11 @@ def test_circuit_descriptor_comparision():
     """Tests circuit descriptor comparision"""
 
     qasm_str = qiskit_circuit.qasm()
-    qiskit_descriptor_qasm = qleet.interface.circuit.CircuitDescriptor.from_qasm(
+    qiskit_descriptor_qasm = codes.interface.circuit.CircuitDescriptor.from_qasm(
         qasm_str, [], qiskit.quantum_info.PauliList(["III"]), "qiskit"
     )
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
@@ -174,10 +174,10 @@ def test_circuit_descriptor_comparision():
     assert str(qiskit_descriptor)[:-16] == str(qiskit_descriptor_qasm)[:-16]
     assert repr(qiskit_descriptor)[:-20] == repr(qiskit_descriptor_qasm)[:-20]
 
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
-    pyquil_decriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_decriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -189,15 +189,15 @@ def test_circuit_descriptor_comparision():
 
 def test_circuit_descriptor_parameters():
     """Tests circuit descriptor's backend parameters"""
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
-    pyquil_decriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_decriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -210,15 +210,15 @@ def test_circuit_descriptor_parameters():
 
 def test_circuit_descriptor_num_qubits():
     """Tests circuit descriptor's  number of qubits"""
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
-    pyquil_decriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_decriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -228,15 +228,15 @@ def test_circuit_descriptor_num_qubits():
 
 def test_circuit_descriptor_backend():
     """Tests circuit descriptor's backend property"""
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
-    pyquil_decriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_decriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -248,15 +248,15 @@ def test_circuit_descriptor_backend():
 def test_circuit_cost():
     """Tests circuit descriptor's cost property and exceptions"""
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit,
         params=[],
         cost_function=qiskit.quantum_info.PauliList(["III"]),
     )
-    cirq_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    cirq_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=cirq_circuit, params=[], cost_function=cirq.PauliSum()
     )
-    pyquil_decriptor = qleet.interface.circuit.CircuitDescriptor(
+    pyquil_decriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=pyquil_circuit, params=[], cost_function=pyquil.paulis.PauliSum([])
     )
 
@@ -275,7 +275,7 @@ def test_circuit_cost():
 
 def test_exceptions_circuit_descriptor():
     """Tests exceptions related to circuit descriptor"""
-    circuit_descriptor = qleet.interface.circuit.CircuitDescriptor(None, [], None)
+    circuit_descriptor = codes.interface.circuit.CircuitDescriptor(None, [], None)
 
     with pytest.raises(ValueError, match="Unsupported framework of circuit"):
         assert circuit_descriptor.default_backend is not None
