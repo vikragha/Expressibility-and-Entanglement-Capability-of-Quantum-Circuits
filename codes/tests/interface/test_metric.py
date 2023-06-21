@@ -2,16 +2,16 @@ import numpy as np
 import networkx as nx
 import pytest
 
-import qleet
+import codes
 
 
 def test_metric():
     graph = nx.gnm_random_graph(n=10, m=40)
-    qaoa = qleet.examples.qaoa_maxcut.QAOACircuitMaxCut(graph, p=1)
-    circuit = qleet.interface.circuit.CircuitDescriptor(
+    qaoa = codes.examples.qaoa_maxcut.QAOACircuitMaxCut(graph, p=1)
+    circuit = codes.interface.circuit.CircuitDescriptor(
         qaoa.qaoa_circuit, qaoa.params, qaoa.qaoa_cost
     )
-    metric = qleet.examples.qaoa_maxcut.MaxCutMetric(graph)
+    metric = codes.examples.qaoa_maxcut.MaxCutMetric(graph)
 
     with pytest.raises(NotImplementedError):
         metric.from_circuit(
