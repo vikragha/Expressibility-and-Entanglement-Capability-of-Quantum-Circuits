@@ -7,7 +7,7 @@ import qiskit
 from qiskit.providers.aer.noise import NoiseModel as qiskitNoiseModel
 from cirq.devices.noise_model import NoiseModel as cirqNoiseModel
 
-import qleet
+import codes
 
 
 @pytest.mark.parametrize(
@@ -26,10 +26,10 @@ def test_expressibility(params, noise_model, metric, samples):
         qiskit_circuit.rx(params[0], 0)
         qiskit_circuit.rz(params[1], 0)
     qiskit_circuit.cx(0, 1)
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit, params=params, cost_function=None
     )
-    qiskit_expressibility = qleet.analyzers.expressibility.Expressibility(
+    qiskit_expressibility = codes.analyzers.expressibility.Expressibility(
         qiskit_descriptor, noise_model=noise_model, samples=samples
     )
     expr = qiskit_expressibility.expressibility(metric)
@@ -73,12 +73,12 @@ def test_exceptions_expressibility(noise_model, metric, plot, msg_match):
     qiskit_circuit.h(0)
     qiskit_circuit.cx(0, 1)
 
-    qiskit_descriptor = qleet.interface.circuit.CircuitDescriptor(
+    qiskit_descriptor = codes.interface.circuit.CircuitDescriptor(
         circuit=qiskit_circuit, params=[], cost_function=None
     )
 
     with pytest.raises(ValueError, match=msg_match):
-        qiskit_expressibility = qleet.analyzers.expressibility.Expressibility(
+        qiskit_expressibility = codes.analyzers.expressibility.Expressibility(
             qiskit_descriptor, noise_model=noise_model, samples=100
         )
         if plot:
