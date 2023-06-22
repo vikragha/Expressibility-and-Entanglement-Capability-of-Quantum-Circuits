@@ -712,36 +712,35 @@ class Ansatz:
 
         return circ
 
-    def get_ansatz(self) -> Any:
-        """
-        Returns:
-                ansatzes: Circuits mentioned in  https://doi.org/10.1007/s42484-021-00038-w by
-                        declaring the particular circuit
-                        identity in the class variables e.g. circuit_id = 1 will return
-                        the 1st circuit mentioned in
-                        https://doi.org/10.1007/s42484-021-00038-w
-        """
+    def get_ansatz(self, params, num_qubits, num_layers) -> Any:
+    """
+    Returns:
+        ansatzes: Circuits mentioned in https://doi.org/10.1007/s42484-021-00038-w by
+                declaring the particular circuit identity in the class variables
+                e.g., circuit_id = 1 will return the 1st circuit mentioned in
+                https://doi.org/10.1007/s42484-021-00038-w
+    """
 
-        ansatzes = {
-            1: self.get_circ_1(),
-            2: self.get_circ_2(),
-            3: self.get_circ_3(),
-            4: self.get_circ_4(),
-            5: self.get_circ_5(),
-            6: self.get_circ_6(),
-            7: self.get_circ_7(),
-            8: self.get_circ_8(),
-            9: self.get_circ_9(),
-            10: self.get_circ_10(),
-            11: self.get_circ_11(),
-            12: self.get_circ_12(),
-            13: self.get_circ_13(),
-            14: self.get_circ_14(),
-            15: self.get_circ_15(),
-            16: self.get_circ_16(),
-            17: self.get_circ_17(),
-            18: self.get_circ_18(),
-            19: self.get_circ_19(),
-        }
+    ansatzes = {
+        1: self.get_circ_1,
+        2: self.get_circ_2,
+        3: self.get_circ_3,
+        4: self.get_circ_4,
+        5: self.get_circ_5,
+        6: self.get_circ_6,
+        7: self.get_circ_7,
+        8: self.get_circ_8,
+        9: self.get_circ_9,
+        10: self.get_circ_10,
+        11: self.get_circ_11,
+        12: self.get_circ_12,
+        13: self.get_circ_13,
+        14: self.get_circ_14,
+        15: self.get_circ_15,
+        16: self.get_circ_16,
+        17: self.get_circ_17,
+        18: self.get_circ_18,
+        19: self.get_circ_19,
+    }
 
-        return ansatzes[self.circuit_id]
+    return ansatzes[self.circuit_id](params, num_qubits, num_layers)
