@@ -41,47 +41,47 @@ class Ansatz:
         self.feature_dim = feature_dim
         self.circuit_id = circuit_id
 
-  def get_ansatz(self):
-        if self.circuit_id == 1:
-            return self.circuit_1_pennylane()
-        elif self.circuit_id == 2:
-            return self.circuit_2_pennylane()
-        elif self.circuit_id == 3:
-            return self.circuit_3_pennylane()
-        elif self.circuit_id == 4:
-            return self.circuit_4_pennylane()
-        elif self.circuit_id == 5:
-            return self.circuit_5_pennylane()
-        elif self.circuit_id == 6:
-            return self.circuit_6_pennylane()
-        elif self.circuit_id == 7:
-            return self.circuit_7_pennylane()
-        elif self.circuit_id == 8:
-            return self.circuit_8_pennylane()
-        elif self.circuit_id == 9:
-            return self.circuit_9_pennylane()
-        elif self.circuit_id == 10:
-            return self.circuit_10_pennylane()
-        elif self.circuit_id == 11:
-            return self.circuit_11_pennylane()
-        elif self.circuit_id == 12:
-            return self.circuit_12_pennylane()
-        elif self.circuit_id == 13:
-            return self.circuit_13_pennylane()
-        elif self.circuit_id == 14:
-            return self.circuit_14_pennylane()
-        elif self.circuit_id == 15:
-            return self.circuit_15_pennylane()
-        elif self.circuit_id == 16:
-            return self.circuit_16_pennylane()
-        elif self.circuit_id == 17:
-            return self.circuit_17_pennylane()
-        elif self.circuit_id == 18:
-            return self.circuit_18_pennylane()
-        elif self.circuit_id == 19:
-            return self.circuit_19_pennylane()
-        else:
-            raise ValueError("Invalid circuit ID")
+      def get_ansatz(self):
+          if self.circuit_id == 1:
+              return self.circuit_1_pennylane()
+          elif self.circuit_id == 2:
+              return self.circuit_2_pennylane()
+          elif self.circuit_id == 3:
+              return self.circuit_3_pennylane()
+          elif self.circuit_id == 4:
+              return self.circuit_4_pennylane()
+          elif self.circuit_id == 5:
+              return self.circuit_5_pennylane()
+          elif self.circuit_id == 6:
+              return self.circuit_6_pennylane()
+          elif self.circuit_id == 7:
+              return self.circuit_7_pennylane()
+          elif self.circuit_id == 8:
+              return self.circuit_8_pennylane()
+          elif self.circuit_id == 9:
+              return self.circuit_9_pennylane()
+          elif self.circuit_id == 10:
+              return self.circuit_10_pennylane()
+          elif self.circuit_id == 11:
+              return self.circuit_11_pennylane()
+          elif self.circuit_id == 12:
+              return self.circuit_12_pennylane()
+          elif self.circuit_id == 13:
+              return self.circuit_13_pennylane()
+          elif self.circuit_id == 14:
+              return self.circuit_14_pennylane()
+          elif self.circuit_id == 15:
+              return self.circuit_15_pennylane()
+          elif self.circuit_id == 16:
+              return self.circuit_16_pennylane()
+          elif self.circuit_id == 17:
+              return self.circuit_17_pennylane()
+          elif self.circuit_id == 18:
+              return self.circuit_18_pennylane()
+          elif self.circuit_id == 19:
+              return self.circuit_19_pennylane()
+          else:
+              raise ValueError("Invalid circuit ID")
 
 
     def circuit_1_pennylane(self):
