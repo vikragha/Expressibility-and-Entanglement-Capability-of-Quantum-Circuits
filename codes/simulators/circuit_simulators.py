@@ -61,7 +61,7 @@ class CircuitSimulator:
                 ).result()
                 result_data = result.data(0)["snapshots"]["density_matrix"]["final"][0]["value"]
             else:
-                circuit.snapshot("final", snapshot_type="statevector")
+                circuit.save_statevector("statevector")
                 result = qiskit.execute(
                     circuit, qiskit.Aer.get_backend("aer_simulator_statevector")
                 ).result()
