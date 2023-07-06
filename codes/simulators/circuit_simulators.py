@@ -51,7 +51,7 @@ class CircuitSimulator:
         if self.circuit.default_backend == "qiskit":
             circuit = self.circuit.qiskit_circuit.bind_parameters(param_resolver)
             if self.noise_model is not None:
-                circuit.snapshot("final", snapshot_type="density_matrix")
+                circuit.save_density_matrix('my_snapshot')
                 result = qiskit.execute(
                     circuit,
                     qiskit.Aer.get_backend("qasm_simulator"),
